@@ -1,0 +1,67 @@
+% !TEX program = xelatex
+\documentclass[degree=undergraduate,bibstyle=numerical,font=empty]{xmuthesis}
+\xmusetup{
+    author                  = 韩博阳 ,
+    title                   = 基于 RISC-V 指令集的通用处理器安全性研究 ,
+    date                    = \today , % 二〇一九年二月二十八日
+    class                   = 2018级 ,
+    studentnumber           = 35320182200138 ,
+    department              = 电子科学与技术学院 ,
+    major                   = 集成电路设计与集成系统 ,
+    advisor                 = 周剑扬 \quad 教授 ,
+    otheradvisor            = 无 ,
+    team                    =  ,
+    fundteam                =  ,
+    degree                  = 本\quad 科 ,
+    englishtitle            = Research on General-Purpose Processor Security Based on RISC-V Instruction Set ,
+    majorordouble           = 主修 , % 辅修
+    lab                     =  ,
+    % 以下几项本科生无需填写，也不用删除
+    classified_code         =  1234                       , % 分类号
+    security_classification =  公开                       , % 内部 秘密 机密 公开 等
+    UDC                     =  5                          , % 国际十进分类法
+    submit_date             =  2020 年 8 月 10 日         , % 论文提交日期
+    defense_date            =  2020 年 8 月 11 日         , % 论文答辩日期
+    conferred_date          =  2020 年 8 月 21 日         , % 学位授予日期
+    chairman                =  张三                       , % 答辩委员会主席
+    referee                 =  李四                       , % 评阅人
+}
+\usepackage{xmulogo}
+\listfiles
+\begin{document}
+\maketitle
+\chapter*{致谢}
+这里致谢
+\begin{abstract}*
+    % 400字
+    中文摘要
+    \keywords*{关键词1；关键词2；关键词3}
+\end{abstract}
+\begin{abstract}
+    English abstract. 
+    \keywords{keyword1; keyword2; keyword3}
+\end{abstract}
+\xmutableofcontents % 双语目录
+
+
+% 正文一般从引言（绪论）开始，以结论或讨论结束。引言（绪
+% 论）应包括论文的研究目的、流程和方法等。研究领域的历史回
+% 顾、文献回溯、理论分析等内容应独立成章，用足够的文字叙述。
+% 结论应包含论文的核心观点，阐述自己的创造性成果及其在本研
+% 究领域中的意义、作用，交代研究工作的局限，提出未来工作的
+% 意见和建议。
+% 不少于 6000 字
+\chapter{正文}{main body}
+正文内容
+\newpage
+同一章的第二页
+\newpage
+同一章的第三页
+\nocite{*} 
+\bibliography{Reference}
+\appendix
+\chapter{附录}{appendix}
+附录
+\backmatter
+后记
+\end{document}

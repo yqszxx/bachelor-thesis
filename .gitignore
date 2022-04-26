@@ -1,3 +1,6 @@
+thesis.pdf
+*.tce
+
 ## Core latex/pdflatex auxiliary files:
 *.aux
 *.lof
