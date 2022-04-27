@@ -531,7 +531,7 @@
     }
 
     {
-    \rmfamily\bfseries\zihao{3} \l__xmu_englishtitle_tl\par\vspace{3ex}
+    \rmfamily\bfseries\zihao{3} \l__xmu_englishtitle_tl\par\vspace{15ex}
     }
 
     { \rmfamily \zihao{4}
@@ -541,11 +541,10 @@
                 学 \qquad 院：& \l__xmu_department_tl    \\
                 专 \qquad 业：& \l__xmu_major_tl         \\
                 年 \qquad 级：& \l__xmu_class_tl         \\
-                校内指导教师：& \l__xmu_advisor_tl       \\
-                校外指导教师：& \l__xmu_otheradvisor_tl  \\
+                指导教师：    & \l__xmu_advisor_tl       \\
         \end{tabular}%
     }
-    \vspace{2ex}
+    \vspace{7ex}
     \rmfamily\zihao{4}
     \par\vspace{4ex}
     \l__xmu_date_tl
