@@ -300,11 +300,11 @@
     }% Chapter font
     \RenewDocumentCommand\cftsecfont{}{
         %\thispagestyle{plain}
-        \zihao{-3}\sffamily
+        \zihao{-4}\sffamily
     }% Section font
     \RenewDocumentCommand\cftsubsecfont{}{
         %\thispagestyle{plain}
-        \zihao{-3}\rmfamily
+        \zihao{-4}\rmfamily
     }%subsection font
 }{
     \RenewDocumentCommand\cftchapfont{}{
