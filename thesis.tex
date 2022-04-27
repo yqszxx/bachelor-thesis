@@ -34,35 +34,15 @@
 \listfiles
 \begin{document}
 \maketitle
-\chapter*{致谢}
-这里致谢
-\begin{abstract}*
-    % 400字
-    中文摘要
-    \keywords*{关键词1；关键词2；关键词3}
-\end{abstract}
-\begin{abstract}
-    English abstract. 
-    \keywords{keyword1; keyword2; keyword3}
-\end{abstract}
+\input{body/thanks}
+\input{body/abstract}
 \xmutableofcontents % 双语目录
-
-
-% 正文一般从引言（绪论）开始，以结论或讨论结束。引言（绪
-% 论）应包括论文的研究目的、流程和方法等。研究领域的历史回
-% 顾、文献回溯、理论分析等内容应独立成章，用足够的文字叙述。
-% 结论应包含论文的核心观点，阐述自己的创造性成果及其在本研
-% 究领域中的意义、作用，交代研究工作的局限，提出未来工作的
-% 意见和建议。
-% 不少于 6000 字
-\chapter{正文}{main body}
-正文内容
-\newpage
-同一章的第二页
-\newpage
-同一章的第三页
+\input{body/c1intro}
+\input{body/c2spectre}
+\input{body/c3dma}
+\input{body/c4conclusion}
 \nocite{*} 
-\bibliography{Reference}
+\bibliography{ref}
 \appendix
 \chapter{附录}{appendix}
 附录

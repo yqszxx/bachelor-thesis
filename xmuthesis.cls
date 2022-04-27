@@ -199,10 +199,7 @@
 
 \hypersetup{
     bookmarksnumbered = false ,
-    linkcolor         = black ,
-    citecolor         = blue  ,
-    urlcolor          = green ,
-    colorlinks                ,
+    hidelinks                 ,
 }
 
 \bool_if:NT \l__xmu_advanced_font_bool{
