@@ -511,19 +511,18 @@
     \bool_if:NTF \l__xmu_undergraduate_bool{
 \begin{center}
     \IfFileExists{figs/xmu-flag.pdf}{
-        \includegraphics[width=8cm]{xmu-flag}
+        \includegraphics[width=5cm]{xmu-flag}
         }{\xmulogo[0.32]}
     \par
-    \vspace{1ex}
+    \vspace{5ex}
 
     {
-    \rmfamily\zihao{-2}\l__xmu_degree_tl
-    \quad 毕\quad 业\quad 论\quad 文\quad
-    （~设\quad 计~）\par\vspace{1ex}
+    \rmfamily\zihao{-2}\textbf{\l__xmu_degree_tl
+    \quad 毕\quad 业\quad 设\quad 计}\par\vspace{1ex}
     }
 
     {
-    \rmfamily\zihao{3}（\l__xmu_majorordouble_tl）\par
+    \rmfamily\zihao{3}\textbf{（\l__xmu_majorordouble_tl 专业）}\par
     }
 
     {
