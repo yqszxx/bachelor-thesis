@@ -1,5 +1,7 @@
 thesis.pdf
+figs/figs.pdf
 *.tce
+*.bkp
 
 ## Core latex/pdflatex auxiliary files:
 *.aux
