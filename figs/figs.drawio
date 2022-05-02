@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2022-05-02T08:23:47.638Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/17.4.2 Chrome/100.0.4896.60 Electron/18.0.1 Safari/537.36" etag="kodKomnTyXINnHrz4MCX" version="17.4.2" type="device" pages="2">
+<mxfile host="Electron" modified="2022-05-02T12:49:53.907Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/17.4.2 Chrome/100.0.4896.60 Electron/18.0.1 Safari/537.36" etag="YqaUeRUd7Nkj8Ufg2lsM" version="17.4.2" type="device" pages="3">
   <diagram id="DSA64htbfSSBchzF3Srr" name="1-comp-sys">
-    <mxGraphModel dx="1038" dy="689" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="600" pageHeight="800" math="0" shadow="0">
+    <mxGraphModel dx="865" dy="539" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="600" pageHeight="800" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -210,11 +210,14 @@
         <mxCell id="Awo_aLclWzc72FwKfJzO-89" value="&lt;span style=&quot;font-size: 12px&quot;&gt;基础设施&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;sketch=0;fillStyle=dashed;fontSize=10;fontColor=#000000;" parent="1" vertex="1">
           <mxGeometry y="240" width="15" height="30" as="geometry" />
         </mxCell>
+        <mxCell id="7AeaiADgrCQqm9wHcKqy-1" value="" style="verticalLabelPosition=bottom;verticalAlign=top;html=1;shape=mxgraph.basic.patternFillRect;fillStyle=diag;step=5;fillStrokeWidth=0.2;fillStrokeColor=#dddddd;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="55" y="45" width="60" height="30" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
   <diagram id="HR7qMGywvtdpTP9dv48w" name="2-microarch-ipc">
-    <mxGraphModel dx="346" dy="230" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="600" pageHeight="800" math="0" shadow="0">
+    <mxGraphModel dx="1038" dy="647" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="600" pageHeight="800" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -637,6 +640,44 @@
         </mxCell>
         <mxCell id="yfPoAuTlmXYsOcm7dXlh-1" value="时钟周期" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;sketch=0;fillStyle=zigzag;" vertex="1" parent="1">
           <mxGeometry x="10" y="5" width="60" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="ds43_v5NP9uN53xYG527" name="3-mem-hier">
+    <mxGraphModel dx="716" dy="446" grid="1" gridSize="5" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="600" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="sZpYmbSsCWhRno5htAEo-1" value="" style="verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=mxgraph.basic.acute_triangle;dx=0.5;labelPosition=center;align=center;" vertex="1" parent="1">
+          <mxGeometry x="94.73333333333333" width="52.266666666666666" height="50.76923076923077" as="geometry" />
+        </mxCell>
+        <mxCell id="3ThQ7VNTHXCXGFMmpau3-7" value="" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;strokeWidth=1;fillColor=#E6E6E6;size=18.133333333333212;" vertex="1" parent="1">
+          <mxGeometry x="71.86666666666666" y="59.23076923076923" width="98" height="33.84615384615385" as="geometry" />
+        </mxCell>
+        <mxCell id="3ThQ7VNTHXCXGFMmpau3-8" value="" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;strokeWidth=1;fillColor=#CCCCCC;size=21;" vertex="1" parent="1">
+          <mxGeometry x="49" y="101.53846153846153" width="143.73333333333332" height="33.84615384615385" as="geometry" />
+        </mxCell>
+        <mxCell id="3ThQ7VNTHXCXGFMmpau3-9" value="" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;strokeWidth=1;fillColor=#B3B3B3;size=18.866666666666674;" vertex="1" parent="1">
+          <mxGeometry x="26.133333333333333" y="143.84615384615384" width="192.73333333333332" height="33.84615384615385" as="geometry" />
+        </mxCell>
+        <mxCell id="3ThQ7VNTHXCXGFMmpau3-10" value="" style="shape=trapezoid;perimeter=trapezoidPerimeter;whiteSpace=wrap;html=1;fixedSize=1;strokeWidth=1;fillColor=#999999;size=20;" vertex="1" parent="1">
+          <mxGeometry y="186.15384615384616" width="245" height="33.84615384615385" as="geometry" />
+        </mxCell>
+        <mxCell id="3ThQ7VNTHXCXGFMmpau3-13" value="寄存器 1kB 300ps" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="147" y="10.38" width="103" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3ThQ7VNTHXCXGFMmpau3-14" value="一级高速缓存 512kB 1ns" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="169.87" y="61.15" width="140.13" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3ThQ7VNTHXCXGFMmpau3-15" value="二级高速缓存 2MB 10ns" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="192.73" y="103.46" width="137.27" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3ThQ7VNTHXCXGFMmpau3-16" value="三级高速缓存 16MB 20ns" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="218.87" y="145.77" width="146.13" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="3ThQ7VNTHXCXGFMmpau3-17" value="DRAM 32GB 100ns" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="245" y="188.08" width="110" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
