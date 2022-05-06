@@ -188,7 +188,7 @@ APD中运用了TAGE-SC（TAgged GEometric Length Predictor with Statistical Corr
 本次攻击将采用Spectre边界检查绕过（Spectre v1 Bounds Check Bypass）\cite{kocher_spectre_2019}方案，
 在香山处理器南湖微架构上实现对任意地址的读取。
 
-首先介绍本攻击方案的攻击攻击面（Attack Surface），也就是被攻击的点位。考虑如算法清单\ref{algo:victim}
+首先介绍本攻击方案的攻击面（Attack Surface），也就是被攻击的点位。考虑如算法清单\ref{algo:victim}
 所示的函数，$a1$是一个长度为$a1\_length$的数组，其中存放着合法的用于索引$a2$数组的下标，
 $x$是一个来自外部并且攻击者可控的参数，用来索引$a1$。这样的结构在真实程序中十分常见，一个可能的例子是：$a2$
 是一个存储结构体的数组，而$a1$中收集了一些具有特殊性质的结构体位于$a2$中的下标，此时算法清单\ref{algo:victim}
