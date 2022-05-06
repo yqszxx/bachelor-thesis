@@ -289,18 +289,218 @@ $secret$地址中的数据值相关的缓存行被换入高速缓存内；第\re
 的$i$即最有可能为$secret$地址中的数据的值，至此Spectre攻击方案介绍完毕。
 
 \section{可行性验证}{Feasibility Verification}
-\somewords
+为了证明上文中介绍的攻击方案的可行性，接下来将在香山高性能开源RISC-V处理器上实现缓存控制与检测算法与
+误导预测执行流算法并最终实现完整的Spectre边界检查绕过攻击。
+
+本文使用的香山处理器代码版本号（Commit ID）为5095522。
+
 \subsection{缓存控制与检测}{Cache Manipulation and Measurement}
-flush cache line
-Timed read
+缓存控制与检测部分用于缓存侧信道攻击，其中控制主要是指将特定地址从高速缓存中换出（Flush），
+检测是指测量对特定地址读取指令所耗费的时间。
+
+控制特定地址从高速缓存中换出有多种方案，例如x86指令集处理器使用单独的clflush指令将指定地址
+从整个存储器子系统的各级高速缓存中换出，写回DRAM；SiFive公司的HiFive Unmatched SoC使用一组映射
+到存储器地址空间的控制寄存器（Memory Mapped I/O，MMIO）实现相同功能。
+
+\begin{algorithm}
+	\caption{Cache Evict}\label{algo:cache-evict}
+	\hspace*{\algorithmicindent} \textbf{Input} $address$
+	\begin{algorithmic}[1]
+		\Function{Evict}{}
+			\State $index \gets \text{get\_index}(address)$
+			\For{$i \gets \text{ ways of the cache}$}
+				\State access $\textbf{MEM}[\text{generate\_tag}(i) + index]$
+		  	\EndFor
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm}
+
+香山处理器没有提供从高速缓存中换出特点地址的
+直接实现方案。由于从存储器地址空间中的地址到高速缓存行之间是多对一的映射关系，即有多个可能的地址被映射
+到同一缓存行。基于这样的特点，可以通过访问与需要被换出的地址映射到相同缓存行的其他地址，将其他地址
+换入高速缓存，替换（Evict）掉需要被换出的地址。这种算法涉及到的过程有：计算需要被换出地址对应的
+高速缓存索引（Index）；生成一组与目标索引一致的候选地址；访问足够多的候选地址，以替换可能存在于
+不同高速缓存路（Way）中的目标地址。具体流程如算法\ref{algo:cache-evict}所示。这一算法需要依据
+高速缓存的参数实现候选地址的生成，表\ref{tab:cache-param}归纳了香山处理器精简配置的数据缓存参数。
+
+\begin{table}[!ht]
+	\centering
+\begin{threeparttable}[b]
+\zihao{5}
+\caption{香山处理器MinimalConfig数据高速缓存参数}
+\begin{tabular}{ccccc}
+	\toprule
+	高速缓存层级 & 缓存行大小（字节） & 缓存行索引数量 & 路数量 & 缓存总大小（字节） \\
+	\midrule
+	一级 & 64 & 64 & 8 & 32k \\
+	二级 & 64 & 1024 & 8 & 512k \\
+	\bottomrule
+\end{tabular}
+\label{tab:cache-param}
+\end{threeparttable}
+\end{table}
+
+在缓存的检测部分，需要实现对特定地址执行读取指令所耗费的时间的精确测量。RISC-V指令集中，
+设计有mcycle控制与状态寄存器（Control and Status Register，CSR），这一寄存器内存储有
+处理器自最近一次复位以来已运行的时钟周期数，可作为准确的时间基准。在香山处理器设计中，对
+CSR的读写指令会保证与其他指令间的严格顺序（即串行化），意味着乱序执行机制不会对存储器读取
+指令时间的测量产生影响。所以只需在存储器读取指令前后各加入一条对mcycle寄存器的读取指令，
+分别获得存储器读取前后的处理器时钟周期数，两者之差即为以时钟周期为单位的存储器读取延时。
+
+为了测试上述缓存控制与检测方案的有效性，使用如算法\ref{algo:cache-test}所示的程序
+进行测试。结果记录在表\ref{tab:cache-test-result}中。由测试结果可见：缓存控制与检测
+方案有效，从一级高速缓存读取的延迟为16个时钟周期，从二级高速缓存读取的延迟为35个时钟周期，
+从DRAM读取的延迟为约200至260个时钟周期.
+
+\begin{breakablealgorithm}
+	\caption{Timed Read}\label{algo:cache-test}
+	\begin{algorithmic}[1]
+		\Function{CacheManupulationTest}{}
+			\Comment{system cold start, nothing in cache at the beginning}
+			\State $address \gets \text{some address in DRAM address range}$
+			\State $time1 \gets \text{timed\_read}(address)$
+			\State $time2 \gets \text{timed\_read}(address)$
+			\State $\text{evict\_l1}(address)$
+			\State $time3 \gets \text{timed\_read}(address)$
+			\State $\text{evict\_l1}(address)$
+			\State $\text{evict\_l2}(address)$
+			\State $time4 \gets \text{timed\_read}(address)$
+			\State $time5 \gets \text{timed\_read}(address)$
+		\EndFunction
+	\end{algorithmic}
+\end{breakablealgorithm}
+
+\begin{table}[!ht]
+	\centering
+\begin{threeparttable}[b]
+\zihao{5}
+\caption{缓存控制与检测方案测试结果}
+\begin{tabular}{x{0.2\textwidth}x{0.2\textwidth}}
+	\toprule
+	结果项 & 结果值 \\
+	\midrule
+	time1 & 194 \\
+	time2 & 16 \\
+	time3 & 35 \\
+	time4 & 259 \\
+	time5 & 16 \\
+	\bottomrule
+\end{tabular}
+\label{tab:cache-test-result}
+\end{threeparttable}
+\end{table}
+
 \subsection{误导预测执行流}{Misleading Speculative Execution Stream}
-Training
+为了误导预测执行流，需要先对分支预测器进行训练，即连续多次使用合法参数调用Victim函数。
+本攻击实例采用训练5次攻击1次的方案，最简单的实现方案如图\ref{fig:attach-with-branch}
+中的C语言代码所示。
+
+\begin{figure}[ht]
+	\centering
+	\begin{lstlisting}[language=c, escapechar=|]
+for (int i = 0; i < 30; i++) {
+	if (i % 6 == 0) { |\label{line:related-branch}|
+		victim(malicious_x); |\label{line:bad-attack}|
+	} else {
+		victim(legal_x);
+	}
+}
+	\end{lstlisting}
+	\caption{包含条件判断的攻击代码}
+	\label{fig:attach-with-branch}
+\end{figure}
+
+实验表明上述代码无法正常误导预测执行流，分支预测器会判定第\ref{line:bad-attack}行对Victim
+函数的调用参数越界。这是因为分支预测器除了会考量当前分支指令的历史（Local History，局部历史），
+也会根据最近执行过的其他分支指令的跳转方向（全局历史，Global History）做出预测。所以分支预测器
+正确地推测出了第\ref{line:related-branch}行的分支与边界检查分支有关联。为了解决这个问题，需要
+在不使用条件判断分支指令的情况下选择合法的$x$或攻击用的$malicious\_x$作为参数传递给Victim函数。
+
+\begin{figure}[ht]
+	\centering
+	\begin{lstlisting}[language=c, escapechar=~]
+for (int i = 0; i < 30; i++) {
+	uint32_t upper_mask = ((i % 6) - 1) & 0xFFFF0000; ~\label{line:gen-upper}~
+	uint32_t full_mask = (upper_mask | (upper_mask >> 16)); ~\label{line:gen-full}~
+	uint32_t x = legal_x ^ (full_mask & (malicious_x ^ legal_x)); ~\label{line:select-x}~
+	victim(x); ~\label{line:call-victim}~
+}
+	\end{lstlisting}
+	\caption{不包含条件判断的攻击代码}
+	\label{fig:attach-without-branch}
+\end{figure}
+
+图\ref{fig:attach-without-branch}所示的C语言代码实现了相同的功能，但没有额外的分支语句对攻击
+指令流造成干扰，其原理如下：第\ref{line:gen-upper}行生成高16位掩码，第\ref{line:gen-full}行生成
+完整的32位掩码，第\ref{line:select-x}行使用32位掩码选择legal\_x或malicious\_x作为x的值，
+第\ref{line:call-victim}行调用Victim函数。第\ref{line:gen-upper}和\ref{line:gen-full}行
+分步生成掩码是因为表达式(i \% 6) - 1在(i \% 6) $\in \{1,2,3,4,5\}$时高16位均为0，但低16位的
+部分不能确定，在(i \% 6)为0时高16位均为1，这样可以稳定生成高16位部分的掩码，随后将高16位
+复制到低16位区域，即可实现生成完整掩码。这样，在(i \% 6) != 0的训练轮，掩码full\_mask各位均为0，
+(full\_mask \& (malicious\_x \^{} legal\_x))也为0，并且由于公式\ref{eq:xor-1}的性质，x取值legal\_x；
+在(i \% 6) == 0的攻击轮，掩码full\_mask各位全为1，
+(full\_mask \& (malicious\_x \^{} legal\_x))取值(malicious\_x \^{} legal\_x)，并且由于公式\ref{eq:xor-2}的性质，
+x取值malicious\_x；
+表\ref{tab:var-list}列出了两种不同情况下算法中各变量的取值情况。
+
+\begin{equation}
+    X \oplus 0 = X \label{eq:xor-1}
+\end{equation}
+\begin{equation}
+	a \oplus X \oplus a = X \label{eq:xor-2}
+\end{equation}
+
+\begin{table}
+	\centering
+\begin{threeparttable}[b]
+\zihao{5}
+\caption{不包含条件判断的攻击代码变量取值情况}
+\begin{tabular}{x{0.2\textwidth}x{0.2\textwidth}x{0.2\textwidth}}
+	\toprule
+	变量名 & \shortstack{(i \% 6) != 0 \\ 训练轮} & \shortstack{(i \% 6) == 0 \\ 攻击轮} \\
+	\midrule
+	upper\_mask & 0x0000\_0000 & 0xFFFF\_0000 \\
+	full\_mask & 0x0000\_0000 & 0xFFFF\_FFFF \\
+	x & legal\_x & malicious\_x \\
+	\bottomrule
+\end{tabular}
+\label{tab:var-list}
+\end{threeparttable}
+\end{table}
+
+\newpage
+
 \subsection{香山南湖架构攻击验证}{Attack Verification on Nanhu Microarchitecture}
-\somewords
+附录\ref{app:spectre-code}中列出了上一小节中介绍的Spectre边界检查绕过攻击方案的C语言实现，阅读代码可以发现
+作为攻击目标的模拟秘密数据secret值被设置为了字母G（其ASCII值为71），在整个攻击程序中，
+没有任何代码直接读取了secret的值。
+编译后，在香山处理器南湖微架构的RTL仿真器上运行这一漏洞利用程序，得到了
+如\ref{fig:spectre-result}图所示的结果。
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=\textwidth]{figs/spectre-result.png}
+	\caption{Spectre漏洞利用程序运行结果}
+	\label{fig:spectre-result}
+\end{figure}
+
+可见程序给出了3个可能的secret值：其中字母G，是secret的值，证明本章
+介绍的攻击方案有效；3是用于训练分支预测器使用的参数，在更精密设计的
+攻击程序中，可以通过多次执行攻击，轮换分支预测器训练值来降低这类干扰；253出现的原因是
+由于高速缓存作为传递秘密信息的侧信道，其信噪比较低导致的，也可以通过多次执行攻击并通过
+统计手段滤除此类干扰。
 
 
 \section{本章小结}{Chapter Summary}
-\somewords
+本章首先介绍了现代高性能处理器的设计理念：超标量流水线、乱序执行、预测式执行和存储器子系统
+分层高速缓存，以及这些理念产生的背景。
+
+接着介绍了Spectre边界检查绕过攻击方案的整体思路，并详细介绍了利用预测式执行机制绕过边界检查、
+使用高速缓存侧信道传递信息的步骤。
+
+最后使用C语言实现了攻击方案，并针对几处需要特别注意的实现细节进行了详细说明。
+然后在香山处理器RTL仿真器上证明了攻击方案的可行性，根据测试结果分析了攻击方案的不足，并
+针对性地提出了完善思路。
 
 
 \newpage
