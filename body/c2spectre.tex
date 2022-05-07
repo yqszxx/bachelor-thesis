@@ -8,7 +8,7 @@
 本研究将在香山处理器的雁栖湖微架构上实现使用与Spectre相同原理的攻击实例。
 
 
-\section{高性能处理器设计理念}{High-Performance Processor Design Philosophy}
+\section{高性能处理器设计理念}{High-Performance Processor Design Philosophy} \label{sec:design-philo}
 处理器设计中最主要的性能指标是单位时间内可以执行的指令数量。由于目前主流的数字
 设计多采用同步设计方案（寄存器对同一个时钟边沿敏感），所以单位时间内可以执行的
 指令数量就可以通过单位时间内的处理器时钟周期数量（也就是处理器的时钟频率）和每
@@ -124,7 +124,7 @@ $N$。使用这种IPC可以大于1方案设计的处理器被称为超标量处�
 超标量流水线，和分级的存储器子系统。
 
 
-\section{香山处理器南湖微架构简介}{Introduction to Nanhu Microarchitecture of Xiangshan Processor}
+\section{香山处理器南湖微架构简介}{Introduction to Nanhu Microarchitecture of Xiangshan Processor} \label{sec:xiangshan}
 香山处理器是2019年在中国科学院支持下，由中国科学院计算技术研究所牵头发起的高性能开源
 RISC-V处理器项目。南湖是香山处理器第二版微架构代号，支持RV64GCBK指令集，已在2022年3月
 完成RTL代码冻结，正在进行后端设计验证流程并将在2022年上半年完成投片，目标是在14nm工艺
@@ -184,8 +184,9 @@ APD中运用了TAGE-SC（TAgged GEometric Length Predictor with Statistical Corr
 高速缓存提供最新的数据并将对应缓存行（Cache Line）置为无效状态。
 
 
-\section{攻击方案}{Attack Plan}
-本次攻击将采用Spectre边界检查绕过（Spectre v1 Bounds Check Bypass）\cite{kocher_spectre_2019}方案，
+\section{攻击方案}{Attack Plan} \label{sec:spectre}
+本次攻击在采用Spectre边界检查绕过（Spectre v1 Bounds Check Bypass）\cite{kocher_spectre_2019}方案
+的基础上，设计并实现了基于地址冲突替换（Evict）的高速缓存控制算法，
 在香山处理器南湖微架构上实现对任意地址的读取。
 
 首先介绍本攻击方案的攻击面（Attack Surface），也就是被攻击的点位。考虑如算法清单\ref{algo:victim}
@@ -288,7 +289,7 @@ $secret$地址中的数据值相关的缓存行被换入高速缓存内；第\re
 读取所需的时间存储在$result$数组中；最后，第\ref{line:find-secret}行遍历$result$数组，其中访问时间最短
 的$i$即最有可能为$secret$地址中的数据的值，至此Spectre攻击方案介绍完毕。
 
-\section{可行性验证}{Feasibility Verification}
+\section{可行性验证}{Feasibility Verification} \label{sec:spectre-impl}
 为了证明上文中介绍的攻击方案的可行性，接下来将在香山高性能开源RISC-V处理器上实现缓存控制与检测算法与
 误导预测执行流算法并最终实现完整的Spectre边界检查绕过攻击。
 
@@ -484,23 +485,34 @@ x取值malicious\_x；
 	\label{fig:spectre-result}
 \end{figure}
 
-可见程序给出了3个可能的secret值：其中字母G，是secret的值，证明本章
-介绍的攻击方案有效；3是用于训练分支预测器使用的参数，在更精密设计的
+可见程序给出了3个以字节值排序的可能的secret值，对于字节值在可打印ASCII区间的结果，
+其对应字符显示在单引号中：其中字母G，是secret的值，证明本章
+介绍的攻击方案有效，可在未授权情况下读取任意地址的值。
+剩余的两个值是为噪声，均可通过统计学方法消除，具体分析如下：
+3是用于训练分支预测器使用的参数，在更精密设计的
 攻击程序中，可以通过多次执行攻击，轮换分支预测器训练值来降低这类干扰；253出现的原因是
 由于高速缓存作为传递秘密信息的侧信道，其信噪比较低导致的，也可以通过多次执行攻击并通过
 统计手段滤除此类干扰。
 
 
 \section{本章小结}{Chapter Summary}
-本章首先介绍了现代高性能处理器的设计理念：超标量流水线、乱序执行、预测式执行和存储器子系统
+本章主要介绍了针对处理器微架构攻击：利用Spectre边界检查绕过方案，结合专为香山处理器
+设计的高速缓存Evict控制算法，在南湖微架构上实现对任意地址的读取攻击目标。
+
+\ref{sec:design-philo}介绍了现代高性能处理器的设计理念：超标量流水线、乱序执行、预测式执行和存储器子系统
 分层高速缓存，以及这些理念产生的背景。
 
-接着介绍了Spectre边界检查绕过攻击方案的整体思路，并详细介绍了利用预测式执行机制绕过边界检查、
-使用高速缓存侧信道传递信息的步骤。
+\ref{sec:xiangshan}介绍了现代高性能处理器的一个实例：香山处理器的南湖微架构，
+在此基础上详细说明了南湖微架构中与本次展示的攻击方案有关的部分。
 
-最后使用C语言实现了攻击方案，并针对几处需要特别注意的实现细节进行了详细说明。
-然后在香山处理器RTL仿真器上证明了攻击方案的可行性，根据测试结果分析了攻击方案的不足，并
-针对性地提出了完善思路。
+\ref{sec:spectre}介绍了Spectre边界检查绕过攻击方案的整体思路，
+并着重阐述了利用预测式执行机制绕过边界检查、
+使用高速缓存侧信道传递信息的原理与步骤。
+
+\ref{sec:spectre-impl}使用C语言实现了攻击方案，并针对需要特别注意的实现细节进行了特别说明：
+使用Evict算法实现高速缓存控制；使用无分支的指令流训练分支预测器。
+在香山处理器RTL仿真器上验证了攻击方案的可行性：攻击者通过执行看似正常的指令流，
+在未获得授权的情况下也可以实现对任意地址的读取。
 
 
 \newpage

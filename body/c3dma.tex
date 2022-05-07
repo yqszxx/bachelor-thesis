@@ -6,7 +6,7 @@
 或通用硬件（例如GPU）通过PCIe接口，在操作系统及其他软件无感知的情况下，
 对任意物理内存地址进行读写操作。
 
-\section{处理器系统设计理念}{Processor Systems and Their Common Structures}
+\section{处理器系统设计理念}{Processor Systems and Their Common Structures} \label{sec:ps-struct}
 现代个人计算机、工作站和服务器系统几乎都是IBM公司在1981年推出的IBM PC的
 兼容产品，即处理器作为运算与控制设备，DRAM为随机存储设备，磁盘或固态硬盘
 为持久化存储设备，这些设备和输入输出设备则通过不同的总线系统互联在一起。
@@ -24,10 +24,10 @@
 根集合体（Root Complex，RC）和DRAM存储器控制器，南桥向上通过内部总线（Internal Bus）
 与北桥相联，向下提供多种中低速接口用于连接输入输出设备。
 
-\section{SiFive Freedom U740 SoC结构简介}{Structure of the SiFive Freedom U740 SoC}
+\section{SiFive Freedom U740 SoC结构简介}{Structure of the SiFive Freedom U740 SoC} \label{sec:u740-struct}
 Freedom U740 SoC是SiFive公司于2021年推出的一款包含RISC-V处理器的片上系统，
 这款SoC采用了多核异构架构，包含4个U系列核心和1个S系列核心，支持运行Linux操作系统。
-搭载了U740 SoC的开发板名称为HiFive Unmatched，其上配备了16G DDR4 DRAM存储器，
+搭载了U740 SoC的单板计算机名称为HiFive Unmatched，其上配备了16G DDR4 DRAM存储器，
 以及PCIe、USB和千兆以太网等多种接口。
 
 \begin{figure}[ht]
@@ -64,8 +64,8 @@ PCIe进行此类访问时无需处理器核的介入，从另一方面来说，�
 及运行在其上的程序无法控制，也无从得知PCIe设备正在访问DRAM存储器中的数据。
 
 \subsection{PCIe 子系统}{PCIe Subsystem}
-HiFive Unmatched开发板的PCIe子系统是由位于U740 SoC芯片内的PCIe根集合体、位于开发板
-上的PCIe数据包交换机（Packet Switch）以及各种PCIe Endpoint设备所构成的。
+HiFive Unmatched单板计算机的PCIe子系统是由位于U740 SoC芯片内的PCIe根集合体、
+位于片外的PCIe数据包交换机（Packet Switch）以及各种PCIe Endpoint设备所构成的。
 
 \begin{figure}[ht]
 	\centering
@@ -74,10 +74,10 @@ HiFive Unmatched开发板的PCIe子系统是由位于U740 SoC芯片内的PCIe根
 	\label{fig:unmatched-pcie}
 \end{figure}
 
-如图\ref{fig:unmatched-pcie}所示是HiFive Unmatched开发板的PCIe子系统结构图，
+如图\ref{fig:unmatched-pcie}所示是HiFive Unmatched单板计算机的PCIe子系统结构图，
 稍后用于实现PCIe DMA攻击的FPGA开发板将会通过PCIe x16连接器接入U740 SoC。
 
-\section{攻击方案}{DMA-Based Attack}
+\section{攻击方案}{Attack Plan} \label{sec:pcie-dma}
 在2005年，\citet{becher2005firewire}展示了一种通过FireWire总线使用特制的
 硬件实现了对计算机存储器的任意读写攻击。这一漏洞利用了FireWire总线使用的OHCI
 （Open Host Controller Interface，开放主机控制器接口）协议的DMA功能。
@@ -91,11 +91,11 @@ PCIe协议同样支持DMA传输，但PCIe协议本身并未提供任何用于过
 协议用于连接外部设备，所以基于PCIe的DMA攻击成本将越来越低。
 
 本章将使用Xilinx KCU116 FPGA开发板实现一个软件可控的PCIe Endpoint设备，
-将其连接到HiFive Unmatched开发板的PCIe子系统中，使用PCIe DMA功能实现
+将其连接到HiFive Unmatched单板计算机的PCIe子系统中，使用PCIe DMA功能实现
 对一处运行在U740 SoC上Linux操作系统中程序的秘密信息的读取。
 
 
-\section{可行性验证}{An Attack Example Based on PCIe DMA}
+\section{可行性验证}{Feasibility Verification} \label{sec:dma-impl}
 \subsection{可控PCIe Endpoint实现}{Implementation of PCIe Endpoint}
 本小结将实现一个软件可控的PCIe Endpoint设备，可以将上位机下发的读写命令
 转换成PCIe传输事务（Transaction）发送给PCIe上游设备，并将收到的响应内容回传
@@ -197,7 +197,7 @@ int main() {
 \end{figure}
 
 将软件可控PCIe Endpoint综合实现后载入FPGA中，并将KCU116开发板通过PCIe x16插槽与
-HiFive Unmatched开发板连接后，启动两块开发板。进入Linux操作系统后，首先运行命令：
+HiFive Unmatched单板计算机连接后，启动两块板卡。进入Linux操作系统后，首先运行命令：
 
 setpci -s 07:00.0 COMMAND=6
 
@@ -238,18 +238,21 @@ PCIe DMA指令的地址，就可以实现对任意存储器地址的访问。
 \end{figure}
 
 \section{本章小结}{Chapter Summary}
-本章首先介绍了现代计算机系统的常见架构：处理器、存储器和输入输出设备通过总线相连，
-各部件可以通过总线与其他部件通信。
+本章主要介绍了针对处理器系统的DMA攻击：利用PCIe DMA机制，使用基于FPGA专门设计的
+PCIe Endpoint设备，在HiFive Unmatched单板计算机上实现对任意地址的访问攻击目标。
 
-随后展开介绍了用于攻击方案演示的HiFive Unmatched开发板上的PCIe子系统以及U740 SoC
+\ref{sec:ps-struct}介绍了现代计算机系统架构的组件：处理器、存储器和输入输出设备。
+各部件通过总线相连，可以通过总线与其他部件通信。
+
+\ref{sec:u740-struct}展开介绍了用于攻击方案演示的HiFive Unmatched单板计算机上的PCIe子系统以及U740 SoC
 的片上总线系统结构，论证了PCIe Endpoint通过PCIe DMA机制访问DRAM存储器的可行性，并
 给出了DMA访问的数据路径。
 
-接着介绍了基于PCIe DMA的任意存储器地址访问攻击方案的整体思路，并与前人提出的其他
-DMA攻击方案做了对比。
+\ref{sec:pcie-dma}介绍了基于PCIe DMA的任意存储器地址访问攻击方案的整体思路，并与前人提出的其他
+DMA攻击方案做了对比，本方案具有更加难以修复的特点。
 
-最后通过在FPGA上设计可控PCIe Endpoint，并解决了Linux系统下虚拟地址到物理地址的
-翻译问题，从而在HiFive Unmatched硬件上实现了基于PCIe DMA的任意存储器地址访问攻击。
+\ref{sec:dma-impl}通过在FPGA上设计可控PCIe Endpoint，并解决了Linux系统下虚拟地址到物理地址的
+翻译问题，从而在HiFive Unmatched硬件上验证了基于PCIe DMA的任意存储器地址访问攻击。
 
 
 \newpage
