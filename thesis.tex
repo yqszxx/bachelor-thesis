@@ -6,6 +6,16 @@
 
 \DeclareMathOperator*{\argmin}{argmin}
 
+\usepackage{paralist}
+\let\itemize\compactitem
+\let\enditemize\endcompactitem
+\let\enumerate\compactenum
+\let\endenumerate\endcompactenum
+\let\description\compactdesc
+\let\enddescription\endcompactdesc
+
+\usepackage{rotating}
+
 \makeatletter
 \newenvironment{breakablealgorithm}
   {% \begin{breakablealgorithm}
@@ -72,6 +82,16 @@
 \appendix
 \chapter{Spectre漏洞利用代码}{Spectre Proof-of-Concept Code} \label{app:spectre-code}
 \lstinputlisting[language=c]{body/spectre.c}
-\backmatter
-后记
+
+\chapter{虚拟到物理内存地址翻译程序}{Virtual to Physical Address Translator} \label{app:v2p}
+\lstinputlisting[language=c]{body/v2p.c}
+
+\chapter{PCIe设计框图}{Block Design of PCIe Endpoint} \label{app:pcie-ep}
+\begin{sidewaysfigure}
+	\centering
+	\includegraphics[width=\textwidth]{figs/pcie-ep.pdf}
+	\caption{软件可控PCIe Endpoint Block Design}
+\end{sidewaysfigure}
+% \backmatter
+% 后记
 \end{document}
