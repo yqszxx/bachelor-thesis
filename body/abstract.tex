@@ -2,10 +2,55 @@
 
 % 400字
 \begin{abstract}*
-    中文摘要
-    \keywords*{关键词1；关键词2；关键词3}
+    硬件安全在计算机安全领域至关重要，随着云计算的普及以及边缘计算的兴起，
+    越来越多的硬件将被部署，对硬件安全的要求也更加严格。
+    本研究对近期提出的针对处理器及其系统的硬件攻击方案进行调研，
+    选择其中技术含量高、危害性大的两种攻击方案进行深入理解与分析，
+    并在RISC-V指令集硬件生态中的两款重要硬件产品上进行了验证。
+    第一种攻击方案基于中科院计算所的香山高性能开源处理器，
+    在Spectre攻击方案的基础上，
+    设计并实现了基于地址冲突替换的高速缓存控制算法，
+    最终实现了一种针对高性能处理器微架构的预测执行机制和缓存侧信道的攻击实例。
+    第二种攻击方案以SiFive公司最新的HiFive Unmatched单板计算机作为攻击目标，
+    使用专门设计的FPGA PCIe Endpoint设备，
+    实现了一种针对处理器系统的基于PCIe DMA的非授权访问攻击实例。
+    本研究展示的两种面向RISC-V生态硬件的攻击，
+    具有隐蔽性强、容易实施和危害性大的特点。
+    \keywords*{RISC-V指令集；硬件安全；侧信道攻击；DMA攻击}
 \end{abstract}
 \begin{abstract}
-    English abstract. 
-    \keywords{keyword1; keyword2; keyword3}
+    Hardware security is very important in the field of
+    computer security.
+    With the popularity of cloud computing and
+    the rise of edge computing,
+    more and more hardware will be deployed,
+    and the requirements for hardware security are
+    correspondingly stricter.
+    This research investigates the recently proposed
+    hardware attack schemes against processors and
+    their systems,
+    and selects two attack schemes with high technology
+    and great harm for in-depth understanding and analysis,
+    then implements them on two important RISC-V hardwares.
+    The first part of this study is the Spectre attack,
+    an attack exploits speculative execution and
+    cache side-channel of modern high-performance processor
+    micro-architectures.
+    A cache content control algorithm based on
+    address conflict replacement is designed and implemented
+    to facilitate the Spectre attack, which is then implemented
+    on the Xiangshan high-performance open source processor of
+    the Institute of Computing Technology,
+    Chinese Academy of Sciences.
+    This research also carries out the PCIe DMA attack
+    based on the latest hardware HiFive Unmatched
+    single board computer from SiFive.
+    Using the FPGA PCIe Endpoint device specially designed
+    for this attack, this research realizes a PCIe DMA-based
+    unauthorized access attack example against the
+    processor system.
+    The above two attacks against RISC-V ecological hardware
+    have the characteristics of strong concealment,
+    easy implementation and great harm.
+    \keywords{RISC-V ISA; Hardware Security; Side-Channel Attack; DMA Attack}
 \end{abstract}
