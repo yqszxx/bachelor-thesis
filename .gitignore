@@ -1,5 +1,8 @@
-thesis.pdf
-figs/figs.pdf
+paper/thesis.pdf
+paper/figs/figs.pdf
+
+*.dtmp
+
 *.tce
 *.bkp
 

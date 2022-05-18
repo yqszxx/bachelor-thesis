@@ -204,7 +204,7 @@ $x$是一个来自外部并且攻击者可控的参数，用来索引$a1$。这�
 			\If {$0 \leq x$ \textbf{and} $x < \textit{a1\_length}$} \label{line:guard}
 				\State $index \gets \textbf{MEM}[a1 + x]$ \label{line:access-a1}
 				\State $offset \gets \text{calculate\_offset}(index)$ \label{line:calc-off}
-				\State $data \gets \textbf{MEM}[a2 + offset]$ \label{line:access-a2}
+				\State $data \gets$ \textbf{MEM}$[a2 + offset]$ \label{line:access-a2}
 			\Else
 				\State $data \gets \text{some invalid value}$
 			\EndIf
