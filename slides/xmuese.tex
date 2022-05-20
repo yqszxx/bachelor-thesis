@@ -1,0 +1,181 @@
+\usepackage{graphicx} % Allows including images
+\usepackage{booktabs} % Allows the use of \toprule,
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{amsmath}
+\usepackage{mathtools, bm}
+\usepackage{multicol}
+% --------------------Chinese Support--------------------------
+\usepackage{ctex}
+\usepackage{xeCJK}
+\usepackage{fontspec} 
+\setCJKmainfont{Microsoft YaHei}
+% --------------------Biber Support----------------------------
+\usepackage[backend=bibtex]{biblatex}
+
+\makeatletter
+\let\@@magyar@captionfix\relax
+\makeatother
+
+\usefonttheme{professionalfonts}
+
+\DeclareOptionBeamer{width}
+{\PassOptionsToPackage{width=#1}{beamerouterthemesidebar}}
+
+\DeclareOptionBeamer{hideothersubsections}
+{\PassOptionsToPackage{hideothersubsections=#1}{beamerouterthemesidebar}}
+
+\DeclareOptionBeamer{hideallsubsections}
+{\PassOptionsToPackage{hideallsubsections=#1}{beamerouterthemesidebar}}
+
+\ProcessOptionsBeamer
+
+\mode<presentation>
+
+\useoutertheme[height=0pt,left,hideothersubsections]{sidebar}
+
+\usecolortheme{seahorse}
+\setbeamercolor*{titlelike}{parent=structure}
+
+\useinnertheme{rectangles}
+\setbeamertemplate{frametitle}{
+\leftskip=10pt\vspace{16pt}\insertframetitle
+}
+
+% ---------------Global Color Settings----------------------------
+%\definecolor{xmucolor}{RGB}{0 114 198}%Blue
+\definecolor{xmucolor}{RGB}{18 64 102}%XMUBlue
+%\definecolor{xmucolor}{RGB}{1 168 156}%Cyan
+%\definecolor{xmucolor}{RGB}{0 128 0}%Green
+%\definecolor{xmucolor}{RGB}{249 105 14}%Orange
+%\definecolor{xmucolor}{RGB}{102 51 153}%Purple
+%\definecolor{xmucolor}{RGB}{150 40 26}%Red
+% ----------------------------------------------------------------
+
+\setbeamercolor{sidebar}{bg=xmucolor}
+
+\setbeamercolor{author in sidebar}{bg=white,fg=white!20}
+\setbeamerfont{author in sidebar}{series=\itshape}
+
+\setbeamerfont{title}{size = {\fontsize{26}{36}}, series=\bfseries}
+\setbeamerfont{author}{size = {\fontsize{20}{40}}}
+\setbeamerfont{institute}{size = {\fontsize{15}{40}}}
+\setbeamerfont{date}{size = {\fontsize{18}{20}}}
+\setbeamerfont{frametitle}{size = {\fontsize{20}{20}}, series=\bfseries}
+
+
+\setbeamercolor{title in sidebar}{bg=white,fg=white}
+\setbeamerfont{title in sidebar}{series=\bfseries}
+
+\setbeamercolor{structure}{fg=xmucolor}
+\setbeamercolor{section in sidebar}{fg=white}
+\setbeamercolor{subsection in sidebar}{fg=white}
+
+
+\setbeamercolor{section in toc}{fg=xmucolor}
+\setbeamercolor{subsection in toc}{fg=xmucolor}
+\setbeamerfont{section in toc}{size = {\fontsize{16}{30}}}
+\setbeamerfont{subsection in toc}{size = {\fontsize{12}{16}}}
+
+\setbeamertemplate{section in toc}
+{\leavevmode\leftskip=5ex%
+	\llap{%
+		\usebeamerfont*{section number projected}%
+		\usebeamercolor{section number projected}%
+		\begin{pgfpicture}{-1ex}{-0.5ex}{3ex}{4ex}
+			\color{bg}
+			\pgfpathcircle{\pgfpoint{0pt}{.75ex}}{1.7ex}
+			\pgfusepath{fill}
+			\pgftext[base]{\color{fg}\inserttocsectionnumber}
+		\end{pgfpicture}\kern1.25ex%
+	}%
+	\inserttocsection\par}
+\setbeamertemplate{subsection in toc}
+{\leavevmode\leftskip=3em$\bullet$\hskip.5em\inserttocsubsection\par}
+
+
+\setbeamerfont{caption name}{size = {\fontsize{12}{12}}}
+\setbeamerfont{caption}{size = {\fontsize{12}{12}}}
+
+%\usepackage[T1]{fontenc}
+%\usepackage[default, osfigures]{opensans}
+
+\usepackage{transparent}
+\usebackgroundtemplate{
+	% ---------------------aspectratio=1610-----------------------
+	% \hspace*{0.235\paperwidth}
+	% {\includegraphics[width=0.6\paperwidth]{xmuese}}
+	% ------------------------------------------------------------
+
+	% ---------------------aspectratio=169------------------------
+	\hspace*{0.26\paperwidth}
+	{\includegraphics[width=0.55\paperwidth]{xmuese}}
+	% ------------------------------------------------------------
+
+	% ---------------------aspectratio=43-------------------------
+	%\hspace*{0.18\paperwidth}
+	%{\includegraphics[width=0.725\paperwidth]{xmuese}}
+	% ------------------------------------------------------------
+}
+
+\setbeamertemplate{itemize item}[circle]
+\setbeamertemplate{itemize subitem}[circle]
+\setbeamertemplate{enumerate item}[circle]
+\setbeamertemplate{enumerate subitem}[circle]
+\setbeamercolor{block title}{bg=xmucolor,fg=white}
+\setbeamercolor{block title example}{fg=xmucolor}
+
+\makeatletter
+\setbeamercolor{myfootlinetext}{fg=xmucolor}
+\newdimen\mywidth%
+\setlength{\mywidth}{\paperwidth}%
+\addtolength{\mywidth}{-\beamer@sidebarwidth}%
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=\beamer@sidebarwidth,ht=1ex,dp=1ex,right]{sidebar}%
+  \end{beamercolorbox}
+  \begin{beamercolorbox}[wd=\mywidth,ht=1ex,dp=1ex,right]{myfootlinetext}%
+    \usebeamerfont{date in head/foot}\hfill\insertshorttitle\hspace*{2em}\insertshortauthor{}\hspace*{2em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+\makeatother
+
+\makeatletter
+\setbeamertemplate{sidebar \beamer@sidebarside}%{sidebar theme}
+{
+  \beamer@tempdim=\beamer@sidebarwidth%
+  \advance\beamer@tempdim by -6pt%
+
+  \vspace{0.5cm}
+  \hspace{0.132cm}\includegraphics[width=1.3cm]{xmu.pdf}
+  \vspace{0.5cm}
+
+  \insertverticalnavigation{\beamer@sidebarwidth}%
+  \vfill
+  \ifx\beamer@sidebarside\beamer@lefttext%
+  \else%
+	\usebeamercolor{normal text}%
+	\llap{\usebeamertemplate***{navigation symbols}\hskip0.1cm}%
+	\vskip2pt%
+  \fi%
+}%
+
+\setbeamertemplate{section in sidebar}{\vbox{
+	\vskip5ex
+    \beamer@sidebarformat{3pt}{section in sidebar}{\insertsectionhead}}}
+\setbeamertemplate{section in sidebar shaded}{\vbox{
+	\vskip5ex
+    \beamer@sidebarformat{3pt}{section in sidebar shaded}{\insertsectionhead}}}
+\makeatother
+
+\setbeamertemplate{navigation symbols}{} % To remove the navigation symbols from the bottom of all slides uncomment this line
+
+\definecolor{MyBackground}{RGB}{255,241,167}
+\setbeamercolor{background canvas}{bg=MyBackground}
+
+\mode
+<all>
